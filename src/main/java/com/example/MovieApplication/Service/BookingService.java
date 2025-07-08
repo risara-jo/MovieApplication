@@ -132,7 +132,7 @@ public class BookingService {
                 .collect(Collectors.toList());
 
         if(!duplicateSeats.isEmpty()){
-            throw new RuntimeException("Seats are already booked!")
+            throw new RuntimeException("Seats are already booked!");
         }
     }
 
