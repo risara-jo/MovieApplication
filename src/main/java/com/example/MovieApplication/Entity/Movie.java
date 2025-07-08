@@ -2,6 +2,7 @@ package com.example.MovieApplication.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.dialect.MySQL8Dialect;
 
 import java.time.LocalDate;
 import java.util.List;

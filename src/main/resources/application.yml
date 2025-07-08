@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/movieapp
+    username: root
+    password: newpassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+jwt:
+  secret: 7dd289a39fc3f1db6cef7681c2cf463c50cac89e
+  expiration: 3600000
