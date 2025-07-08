@@ -5,6 +5,7 @@ import com.example.MovieApplication.DTO.LoginResponseDTO;
 import com.example.MovieApplication.DTO.RegisterRequestDTO;
 import com.example.MovieApplication.Entity.User;
 import com.example.MovieApplication.Repository.UserRepository;
+import com.example.MovieApplication.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
