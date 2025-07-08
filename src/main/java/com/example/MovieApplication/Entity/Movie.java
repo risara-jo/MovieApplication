@@ -21,6 +21,5 @@ public class Movie {
     private String language;
 
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
-
     private List<Show> show;
 }
