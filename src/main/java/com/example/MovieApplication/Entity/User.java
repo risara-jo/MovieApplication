@@ -1,5 +1,6 @@
 package com.example.MovieApplication.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +26,7 @@ public class User implements UserDetails {
     private Set<String> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Booking> bookings;
 
     public User() {

@@ -4,6 +4,7 @@ import com.example.MovieApplication.DTO.BookingDTO;
 import com.example.MovieApplication.Entity.Booking;
 import com.example.MovieApplication.Entity.BookingStatus;
 import com.example.MovieApplication.Service.BookingService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class BookingColtroller {
     public ResponseEntity<List<Booking>> getUserBookings(@PathVariable Long id){
         return ResponseEntity.ok(bookingService.getUserBookings(id));
     }
-    @GetMapping("/getshowrbookings/{id}")
+    @GetMapping("/getshowbookings/{id}")
     public ResponseEntity<List<Booking>> getShowBookings(@PathVariable Long id){
         return ResponseEntity.ok(bookingService.getShowBookings(id));
     }
