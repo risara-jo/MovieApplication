@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MovieApplication {
 
 	public static void main(String[] args) {
+		System.out.println(" Starting MovieApplication...");
 		SpringApplication.run(MovieApplication.class, args);
 	}
 
