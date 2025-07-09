@@ -17,7 +17,7 @@ public class TheaterController {
     @Autowired
     private TheaterService theaterService;
 
-    @PutMapping("/addtheater")
+    @PostMapping("/addtheater")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Theater> addTheater(@RequestBody TheaterDTO theaterDTO){
         return ResponseEntity.ok(theaterService.addTheater(theaterDTO));

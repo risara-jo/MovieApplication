@@ -1,5 +1,6 @@
 package com.example.MovieApplication.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class Theater {
     private String theaterScreenType;
 
     @OneToMany(mappedBy = "theater", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Show> show;
 
     public Theater() {
