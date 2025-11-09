@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 FRONTEND_BUILD_GUIDE.md
+docs/
