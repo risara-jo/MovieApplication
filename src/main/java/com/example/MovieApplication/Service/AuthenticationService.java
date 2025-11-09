@@ -5,6 +5,7 @@ import com.example.MovieApplication.DTO.LoginResponseDTO;
 import com.example.MovieApplication.DTO.RegisterRequestDTO;
 import com.example.MovieApplication.Entity.User;
 import com.example.MovieApplication.Repository.UserRepository;
+import com.example.MovieApplication.exception.ResourceNotFoundException;
 import com.example.MovieApplication.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -65,7 +66,7 @@ public class AuthenticationService {
     public LoginResponseDTO login(LoginRequestDTO loginRequestDTO){
 
         User user = userRepository.findByUsername(loginRequestDTO.getUsername())
-                .orElseThrow(()-> new RuntimeException("User not found."));
+                .orElseThrow(()-> new ResourceNotFoundException("User not found."));
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -76,7 +77,9 @@ public class AuthenticationService {
 
         return LoginResponseDTO.builder()
                 .jwtToken(token)
+                .id(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .roles(user.getRoles()).build();
     }
 }

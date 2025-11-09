@@ -3,6 +3,7 @@ package com.example.MovieApplication.Controller;
 import com.example.MovieApplication.DTO.TheaterDTO;
 import com.example.MovieApplication.Entity.Theater;
 import com.example.MovieApplication.Service.TheaterService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +20,7 @@ public class TheaterController {
 
     @PostMapping("/addtheater")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Theater> addTheater(@RequestBody TheaterDTO theaterDTO){
+    public ResponseEntity<Theater> addTheater(@Valid @RequestBody TheaterDTO theaterDTO){
         return ResponseEntity.ok(theaterService.addTheater(theaterDTO));
     }
     @GetMapping("/gettheaterbylocation")
@@ -28,7 +29,7 @@ public class TheaterController {
     }
     @PutMapping("/updatetheater/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Theater> updateTheater(@PathVariable Long id, @RequestBody TheaterDTO theaterDTO){
+    public ResponseEntity<Theater> updateTheater(@PathVariable Long id, @Valid @RequestBody TheaterDTO theaterDTO){
         return ResponseEntity.ok(theaterService.updateTheater(id, theaterDTO));
     }
 

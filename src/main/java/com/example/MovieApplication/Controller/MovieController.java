@@ -3,6 +3,7 @@ package com.example.MovieApplication.Controller;
 import com.example.MovieApplication.DTO.MovieDTO;
 import com.example.MovieApplication.Entity.Movie;
 import com.example.MovieApplication.Service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +20,7 @@ public class MovieController {
 
     @PostMapping("/addmovie")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Movie> addMovie(@RequestBody MovieDTO movieDTO){
+    public ResponseEntity<Movie> addMovie(@Valid @RequestBody MovieDTO movieDTO){
 
         return ResponseEntity.ok(movieService.addMovie(movieDTO));
     }
@@ -44,7 +45,7 @@ public class MovieController {
     }
     @PutMapping("/updatemovie/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody MovieDTO movieDTO){
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @Valid @RequestBody MovieDTO movieDTO){
         return ResponseEntity.ok(movieService.updateMovie(id, movieDTO));
     }
     @DeleteMapping("/deletemovie/{id}")

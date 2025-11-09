@@ -3,8 +3,10 @@ package com.example.MovieApplication.Controller;
 import com.example.MovieApplication.DTO.ShowDTO;
 import com.example.MovieApplication.Entity.Show;
 import com.example.MovieApplication.Service.ShowService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +19,8 @@ public class ShowController {
     private ShowService showService;
 
     @PostMapping("/createshow")
-    public ResponseEntity<Show> createShow(@RequestBody ShowDTO showDTO){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Show> createShow(@Valid @RequestBody ShowDTO showDTO){
 
         return ResponseEntity.ok(showService.createShow(showDTO));
     }
@@ -34,11 +37,13 @@ public class ShowController {
         return ResponseEntity.ok(showService.getShowsByTheater(id));
     }
     @PutMapping("/updateshow/{id}")
-    public ResponseEntity<Show> updateShow(@PathVariable Long id, @RequestBody ShowDTO showDTO){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Show> updateShow(@PathVariable Long id, @Valid @RequestBody ShowDTO showDTO){
 
         return ResponseEntity.ok(showService.updateShow(id, showDTO));
     }
     @DeleteMapping("/deleteshow/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteShow(@PathVariable Long id){
 
         showService.deleteShow(id);

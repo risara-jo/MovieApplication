@@ -8,10 +8,13 @@ import com.example.MovieApplication.Entity.User;
 import com.example.MovieApplication.Repository.BookingRepository;
 import com.example.MovieApplication.Repository.ShowRepository;
 import com.example.MovieApplication.Repository.UserRepository;
+import com.example.MovieApplication.exception.BookingException;
+import com.example.MovieApplication.exception.ResourceNotFoundException;
+import com.example.MovieApplication.exception.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -27,22 +30,25 @@ public class BookingService {
     @Autowired
     private UserRepository userRepository;
 
-    public Booking createBooking(BookingDTO bookingDTO){
+    public Booking createBooking(BookingDTO bookingDTO, Authentication authentication){
+
+        // Get authenticated user instead of trusting DTO userId
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
 
         Show show = showRepository.findById(bookingDTO.getShowId())
-                .orElseThrow(()-> new RuntimeException("Show not found."));
+                .orElseThrow(()-> new ResourceNotFoundException("Show not found."));
 
         if(!isSeatsAvailable(show.getId(), bookingDTO.getNumberOfSeats())){
-            throw new RuntimeException("Not enough seats are available.");
+            throw new BookingException("Not enough seats are available.");
         }
 
         if(bookingDTO.getSeatNumbers().size() != bookingDTO.getNumberOfSeats()){
-            throw new RuntimeException("seat numbers and number of seats must be equal");
+            throw new BookingException("seat numbers and number of seats must be equal");
         }
         validateDuplicateSeat(show.getId(), bookingDTO.getSeatNumbers());
 
-        User user = userRepository.findById(bookingDTO.getUserId())
-                .orElseThrow(()-> new RuntimeException("User not found"));
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setShow(show);
@@ -55,6 +61,14 @@ public class BookingService {
         return bookingRepository.save(booking);
     }
 
+    public List<Booking> getMyBookings(Authentication authentication){
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+
+        return bookingRepository.findByUserId(user.getId());
+    }
+
     public List<Booking> getUserBookings(Long userid){
 
         return bookingRepository.findByUserId(userid);
@@ -65,21 +79,45 @@ public class BookingService {
         return bookingRepository.findByShowId(showId);
     }
 
-    public Booking confirmBooking(Long bookingid){
+    public Booking confirmBooking(Long bookingid, Authentication authentication){
         Booking booking = bookingRepository.findById(bookingid)
-                .orElseThrow(()->new RuntimeException("Booking not found."));
+                .orElseThrow(()->new ResourceNotFoundException("Booking not found."));
+
+        // Verify ownership
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        boolean isOwner = booking.getUser().getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRoles().contains("ROLE_ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new UnauthorizedException("You don't have permission to confirm this booking");
+        }
 
         if(booking.getBookingStatus() != BookingStatus.PENDING){
-            throw new RuntimeException("Booking is not in PENDING State.");
+            throw new BookingException("Booking is not in PENDING State.");
         }
         //Payment API's
         booking.setBookingStatus(BookingStatus.CONFIRMED);
         return bookingRepository.save(booking);
     }
 
-    public Booking cancelBooking(Long bookingId){
+    public Booking cancelBooking(Long bookingId, Authentication authentication){
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(()->new RuntimeException("Booking not found."));
+                .orElseThrow(()->new ResourceNotFoundException("Booking not found."));
+
+        // Verify ownership
+        String username = authentication.getName();
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        boolean isOwner = booking.getUser().getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRoles().contains("ROLE_ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new UnauthorizedException("You don't have permission to cancel this booking");
+        }
 
         valitateCancellation(booking);
 
@@ -99,16 +137,16 @@ public class BookingService {
         LocalDateTime deadlineTime =  showTime.minusHours(2);
 
         if(LocalDateTime.now().isAfter(deadlineTime)){
-            throw new RuntimeException("Cannot cancel the booking");
+            throw new BookingException("Cannot cancel the booking");
         }
         if (booking.getBookingStatus() == BookingStatus.CANCELLED){
-            throw new RuntimeException("Booking already been cancelled.");
+            throw new BookingException("Booking already been cancelled.");
         }
     }
 
     public boolean isSeatsAvailable(Long showid, Integer numberOfSeats){
         Show show = showRepository.findById(showid)
-                .orElseThrow(()-> new RuntimeException("Show not found."));
+                .orElseThrow(()-> new ResourceNotFoundException("Show not found."));
 
         int bookedSeats = show.getBookings().stream()
                 .filter(booking -> booking.getBookingStatus() != BookingStatus.CANCELLED)
@@ -120,7 +158,7 @@ public class BookingService {
     public void validateDuplicateSeat(Long showId, List<String> seatNumbers){
 
         Show show = showRepository.findById(showId)
-                .orElseThrow(()-> new RuntimeException("Show not found."));
+                .orElseThrow(()-> new ResourceNotFoundException("Show not found."));
 
         Set<String> occupiedSeats = show.getBookings().stream()
                 .filter(b -> b.getBookingStatus() != BookingStatus.CANCELLED)
@@ -132,7 +170,7 @@ public class BookingService {
                 .collect(Collectors.toList());
 
         if(!duplicateSeats.isEmpty()){
-            throw new RuntimeException("Seats are already booked!");
+            throw new BookingException("Seats are already booked!");
         }
     }
 

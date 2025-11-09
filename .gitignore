@@ -33,3 +33,7 @@ build/
 .vscode/
 FRONTEND_BUILD_GUIDE.md
 docs/
+
+### Environment Variables ###
+.env
+.env.local

@@ -1,17 +1,28 @@
 package com.example.MovieApplication.DTO;
 
 import com.example.MovieApplication.Entity.BookingStatus;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookingDTO {
+    @NotNull(message = "Number of seats is required")
+    @Min(value = 1, message = "Must book at least 1 seat")
+    @Max(value = 10, message = "Cannot book more than 10 seats at once")
     private Integer numberOfSeats;
+
     private LocalDateTime bookingTime;
     private Double price;
     private BookingStatus bookingStatus;
+
+    @NotEmpty(message = "Seat numbers are required")
+    @Size(min = 1, max = 10, message = "Must specify 1-10 seat numbers")
     private List<String> seatNumbers;
+
     private Long userId;
+
+    @NotNull(message = "Show ID is required")
     private Long showId;
 
     public BookingDTO() {

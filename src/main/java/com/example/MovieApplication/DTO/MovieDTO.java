@@ -1,14 +1,31 @@
 package com.example.MovieApplication.DTO;
 
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 
 public class MovieDTO {
 
+    @NotBlank(message = "Movie name is required")
+    @Size(max = 200, message = "Movie name must not exceed 200 characters")
     private String name;
+
+    @NotBlank(message = "Description is required")
+    @Size(max = 1000, message = "Description must not exceed 1000 characters")
     private String description;
+
+    @NotBlank(message = "Genre is required")
     private String genre;
+
+    @NotNull(message = "Duration is required")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
+    @Max(value = 500, message = "Duration must not exceed 500 minutes")
     private Integer duration;
+
+    @NotNull(message = "Release date is required")
     private LocalDate releaseDate;
+
+    @NotBlank(message = "Language is required")
     private String language;
 
     public MovieDTO() {
