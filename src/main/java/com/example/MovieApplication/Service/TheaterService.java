@@ -26,6 +26,10 @@ public class TheaterService {
         return theaterRepository.save(theater);
     }
 
+    public List<Theater> getAllTheaters(){
+        return theaterRepository.findAll();
+    }
+
     public List<Theater> getTheaterByLocation(String location){
         Optional<List<Theater>> listOfTheaterBox = theaterRepository.findByTheaterLocation(location);
 
