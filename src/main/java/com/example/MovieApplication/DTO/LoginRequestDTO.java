@@ -53,6 +53,6 @@ public class LoginRequestDTO {
     }
 
     public String toString() {
-        return "LoginRequestDTO(username=" + this.getUsername() + ", password=" + this.getPassword() + ")";
+        return "LoginRequestDTO(username=" + this.getUsername() + ")";
     }
 }

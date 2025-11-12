@@ -20,6 +20,8 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String email;
+    
+    @JsonIgnore
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -137,6 +139,6 @@ public class User implements UserDetails {
     }
 
     public String toString() {
-        return "User(id=" + this.getId() + ", username=" + this.getUsername() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", roles=" + this.getRoles() + ", bookings=" + this.getBookings() + ")";
+        return "User(id=" + this.getId() + ", username=" + this.getUsername() + ", email=" + this.getEmail() + ", roles=" + this.getRoles() + ")";
     }
 }
