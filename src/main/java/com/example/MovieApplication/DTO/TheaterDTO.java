@@ -5,6 +5,9 @@ public class TheaterDTO {
     private String theaterLocation;
     private Integer theaterCapacity;
     private String theaterScreenType;
+    private Integer numberOfRows;
+    private Integer seatsPerRow;
+    private String seatLayout;
 
     public TheaterDTO() {
     }
@@ -39,6 +42,30 @@ public class TheaterDTO {
 
     public void setTheaterScreenType(String theaterScreenType) {
         this.theaterScreenType = theaterScreenType;
+    }
+
+    public Integer getNumberOfRows() {
+        return this.numberOfRows;
+    }
+
+    public void setNumberOfRows(Integer numberOfRows) {
+        this.numberOfRows = numberOfRows;
+    }
+
+    public Integer getSeatsPerRow() {
+        return this.seatsPerRow;
+    }
+
+    public void setSeatsPerRow(Integer seatsPerRow) {
+        this.seatsPerRow = seatsPerRow;
+    }
+
+    public String getSeatLayout() {
+        return this.seatLayout;
+    }
+
+    public void setSeatLayout(String seatLayout) {
+        this.seatLayout = seatLayout;
     }
 
     public boolean equals(final Object o) {

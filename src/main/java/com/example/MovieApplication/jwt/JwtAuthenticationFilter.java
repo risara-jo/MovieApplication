@@ -46,24 +46,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwtToken = authHeader.substring(7);
-        username = jwtService.extractUsername(jwtToken);
+        try {
+            jwtToken = authHeader.substring(7);
+            username = jwtService.extractUsername(jwtToken);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            var userdetails = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                var userdetails = userRepository.findByUsername(username)
+                        .orElse(null);
 
-            if (jwtService.isTokenValid(jwtToken, userdetails)) {
-                List<SimpleGrantedAuthority> authorities = userdetails.getRoles().stream()
-                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                if (userdetails != null && jwtService.isTokenValid(jwtToken, userdetails)) {
+                    List<SimpleGrantedAuthority> authorities = userdetails.getRoles().stream()
+                            .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            // Invalid JWT token - continue without authentication
+            // This prevents malformed tokens from causing 500 errors
         }
 
         filterChain.doFilter(request, response);

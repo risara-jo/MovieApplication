@@ -10,6 +10,7 @@ import com.example.MovieApplication.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/registeradminuser")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> registerAdminUser(@Valid @RequestBody RegisterRequestDTO registerRequestDTO){
 
         return ResponseEntity.ok(authenticationService.registerAdminUser(registerRequestDTO));
