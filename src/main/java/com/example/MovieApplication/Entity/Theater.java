@@ -14,6 +14,8 @@ public class Theater {
     private String theaterLocation;
     private Integer theaterCapacity;
     private String theaterScreenType;
+    private Integer numberOfRows;
+    private Integer seatsPerRow;
 
     @OneToMany(mappedBy = "theater", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -64,6 +66,22 @@ public class Theater {
 
     public void setTheaterScreenType(String theaterScreenType) {
         this.theaterScreenType = theaterScreenType;
+    }
+
+    public Integer getNumberOfRows() {
+        return this.numberOfRows;
+    }
+
+    public void setNumberOfRows(Integer numberOfRows) {
+        this.numberOfRows = numberOfRows;
+    }
+
+    public Integer getSeatsPerRow() {
+        return this.seatsPerRow;
+    }
+
+    public void setSeatsPerRow(Integer seatsPerRow) {
+        this.seatsPerRow = seatsPerRow;
     }
 
     public void setShow(List<Show> show) {
