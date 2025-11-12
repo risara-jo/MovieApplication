@@ -24,6 +24,7 @@ public class TheaterService {
         theater.setTheaterScreenType(theaterDTO.getTheaterScreenType());
         theater.setNumberOfRows(theaterDTO.getNumberOfRows());
         theater.setSeatsPerRow(theaterDTO.getSeatsPerRow());
+        theater.setSeatLayout(theaterDTO.getSeatLayout());
 
         return theaterRepository.save(theater);
     }
@@ -50,6 +51,7 @@ public class TheaterService {
         theater.setTheaterScreenType(theaterDTO.getTheaterScreenType());
         theater.setNumberOfRows(theaterDTO.getNumberOfRows());
         theater.setSeatsPerRow(theaterDTO.getSeatsPerRow());
+        theater.setSeatLayout(theaterDTO.getSeatLayout());
 
         return theaterRepository.save(theater);
     }

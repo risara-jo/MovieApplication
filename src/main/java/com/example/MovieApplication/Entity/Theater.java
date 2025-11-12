@@ -16,6 +16,9 @@ public class Theater {
     private String theaterScreenType;
     private Integer numberOfRows;
     private Integer seatsPerRow;
+    
+    @Column(columnDefinition = "TEXT")
+    private String seatLayout; // Stores seat arrangement as comma-separated row data
 
     @OneToMany(mappedBy = "theater", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -82,6 +85,14 @@ public class Theater {
 
     public void setSeatsPerRow(Integer seatsPerRow) {
         this.seatsPerRow = seatsPerRow;
+    }
+
+    public String getSeatLayout() {
+        return this.seatLayout;
+    }
+
+    public void setSeatLayout(String seatLayout) {
+        this.seatLayout = seatLayout;
     }
 
     public void setShow(List<Show> show) {

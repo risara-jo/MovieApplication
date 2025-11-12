@@ -7,6 +7,7 @@ public class TheaterDTO {
     private String theaterScreenType;
     private Integer numberOfRows;
     private Integer seatsPerRow;
+    private String seatLayout;
 
     public TheaterDTO() {
     }
@@ -57,6 +58,14 @@ public class TheaterDTO {
 
     public void setSeatsPerRow(Integer seatsPerRow) {
         this.seatsPerRow = seatsPerRow;
+    }
+
+    public String getSeatLayout() {
+        return this.seatLayout;
+    }
+
+    public void setSeatLayout(String seatLayout) {
+        this.seatLayout = seatLayout;
     }
 
     public boolean equals(final Object o) {
