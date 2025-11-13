@@ -33,6 +33,11 @@ public class TheaterService {
         return theaterRepository.findAll();
     }
 
+    public Theater getTheaterById(Long id){
+        return theaterRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("No theater found for the id "+id));
+    }
+
     public List<Theater> getTheaterByLocation(String location){
         Optional<List<Theater>> listOfTheaterBox = theaterRepository.findByTheaterLocation(location);
 

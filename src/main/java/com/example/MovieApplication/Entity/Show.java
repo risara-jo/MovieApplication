@@ -15,6 +15,9 @@ public class Show {
     private Long id;
     private LocalDateTime showTime;
     private Double price;
+    
+    @Column(columnDefinition = "TEXT")
+    private String seatPricing; // JSON string storing custom pricing for specific seats
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "movie_id", nullable = false)
@@ -65,6 +68,14 @@ public class Show {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+    
+    public String getSeatPricing() {
+        return this.seatPricing;
+    }
+
+    public void setSeatPricing(String seatPricing) {
+        this.seatPricing = seatPricing;
     }
 
     public void setMovie(Movie movie) {

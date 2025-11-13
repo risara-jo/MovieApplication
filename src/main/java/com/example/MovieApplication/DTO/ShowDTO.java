@@ -8,6 +8,7 @@ public class ShowDTO {
     private Double price;
     private Long movieId;
     private Long theaterId;
+    private String seatPricing;
 
     public ShowDTO() {
     }
@@ -42,6 +43,14 @@ public class ShowDTO {
 
     public void setTheaterId(Long theaterId) {
         this.theaterId = theaterId;
+    }
+    
+    public String getSeatPricing() {
+        return this.seatPricing;
+    }
+
+    public void setSeatPricing(String seatPricing) {
+        this.seatPricing = seatPricing;
     }
 
     public boolean equals(final Object o) {

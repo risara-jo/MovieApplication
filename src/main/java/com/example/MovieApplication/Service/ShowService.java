@@ -37,6 +37,7 @@ public class ShowService {
         show.setPrice(showDTO.getPrice());
         show.setMovie(movie);
         show.setTheater(theater);
+        show.setSeatPricing(showDTO.getSeatPricing());
 
         return showRepository.save(show);
     }
@@ -74,6 +75,7 @@ public class ShowService {
         show.setPrice(showDTO.getPrice());
         show.setMovie(movie);
         show.setTheater(theater);
+        show.setSeatPricing(showDTO.getSeatPricing());
 
         return showRepository.save(show);
     }

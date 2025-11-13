@@ -49,12 +49,23 @@ public class BookingService {
         }
         validateDuplicateSeat(show.getId(), bookingDTO.getSeatNumbers());
 
+        // Calculate and validate the price
+        Double calculatedPrice = calculatePriceForSeats(show, bookingDTO.getSeatNumbers());
+        
+        // If DTO provides a price, validate it matches our calculation (prevent price manipulation)
+        if (bookingDTO.getPrice() != null) {
+            // Allow small floating point differences (within 1 cent)
+            if (Math.abs(bookingDTO.getPrice() - calculatedPrice) > 0.01) {
+                throw new BookingException("Price mismatch. Expected: " + calculatedPrice + ", Received: " + bookingDTO.getPrice());
+            }
+        }
+
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setShow(show);
         booking.setNumberOfSeats(bookingDTO.getNumberOfSeats());
         booking.setSeatNumbers(bookingDTO.getSeatNumbers());
-        booking.setPrice(calculateTotalAmount(show.getPrice(), bookingDTO.getNumberOfSeats()));
+        booking.setPrice(calculatedPrice);  // Use calculated price for security
         booking.setBookingTime(LocalDateTime.now());
         booking.setBookingStatus(BookingStatus.PENDING);
 
@@ -176,6 +187,39 @@ public class BookingService {
 
     public Double calculateTotalAmount(Double price, Integer numberOfSeats){
         return price * numberOfSeats;
+    }
+
+    /**
+     * Calculate the total price for specific seats, accounting for custom seat pricing
+     * @param show The show containing default price and optional custom pricing
+     * @param seatNumbers List of seat numbers being booked (e.g., ["A5", "A6", "A7"])
+     * @return Total price for all seats
+     */
+    public Double calculatePriceForSeats(Show show, List<String> seatNumbers) {
+        Double totalPrice = 0.0;
+        Double defaultPrice = show.getPrice();
+        
+        // Parse custom seat pricing if available
+        java.util.Map<String, Double> customPricing = new java.util.HashMap<>();
+        if (show.getSeatPricing() != null && !show.getSeatPricing().isEmpty()) {
+            try {
+                // Parse JSON string like {"A5":100.00,"A6":100.00}
+                com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                customPricing = mapper.readValue(show.getSeatPricing(), 
+                    new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Double>>() {});
+            } catch (Exception e) {
+                // If parsing fails, log and use default pricing for all seats
+                System.err.println("Failed to parse seat pricing JSON: " + e.getMessage());
+            }
+        }
+        
+        // Calculate price for each seat
+        for (String seatNumber : seatNumbers) {
+            Double seatPrice = customPricing.getOrDefault(seatNumber, defaultPrice);
+            totalPrice += seatPrice;
+        }
+        
+        return totalPrice;
     }
 
 }
