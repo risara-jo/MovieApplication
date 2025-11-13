@@ -40,7 +40,7 @@ public class BookingColtroller {
     }
 
     @GetMapping("/getshowbookings/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    // No authorization required - users need to see booked seats to avoid booking conflicts
     public ResponseEntity<List<Booking>> getShowBookings(@PathVariable Long id){
         return ResponseEntity.ok(bookingService.getShowBookings(id));
     }
