@@ -148,10 +148,11 @@ public class BookingService {
         LocalDateTime deadlineTime =  showTime.minusHours(2);
 
         if(LocalDateTime.now().isAfter(deadlineTime)){
-            throw new BookingException("Cannot cancel the booking");
+            throw new BookingException("Cannot cancel the booking. Cancellations must be made at least 2 hours before show time.");
         }
+        
         if (booking.getBookingStatus() == BookingStatus.CANCELLED){
-            throw new BookingException("Booking already been cancelled.");
+            throw new BookingException("Booking has already been cancelled.");
         }
     }
 
